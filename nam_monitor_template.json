@@ -1,0 +1,35 @@
+{
+    "enabled": false,
+    "frequencyMin": null,
+    "locations": [],
+    "name": null,
+    "type": "MULTI_PROTOCOL",
+    "steps": [
+        {
+            "constraints": [
+                {
+                    "type": "SUCCESS_RATE_PERCENT",
+                    "properties": {
+                        "value": "100",
+                        "operator": ">="
+                    }
+                }
+            ],
+            "name": null,
+            "properties": null,
+            "requestConfigurations": [
+                {
+                    "constraints": []
+                }
+            ],
+            "requestType": null,
+            "targetList": []
+        }
+    ],
+    "tags": [
+        {
+            "key": "generated-by",
+            "value": "extension_migrator"
+        }
+    ]
+}

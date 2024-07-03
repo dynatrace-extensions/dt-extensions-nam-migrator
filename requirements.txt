@@ -1,0 +1,4 @@
+dt==1.1.64
+requests==2.32.3
+typer==0.12.3
+typing_extensions==4.12.2
