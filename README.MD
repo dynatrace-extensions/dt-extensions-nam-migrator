@@ -15,9 +15,9 @@ Each endpoint is converted to a single NAM monitor.
 
 ## Usage
 1. Prepare environmental variables
-   * `DT_URL` - URL of the tenant
-   * `DT_TOKEN` - token with the scopes listed above 
-   * alternatively provide the parameters `--dt-url` and `--dt-token` 
+   * `DT_URL` - URL of the tenant - `https://saas_tenant_id.live.dynatrace.com` for SaaS or `https://managed_web_ui_url/e/managed_environment_uuid` for Managed. Note that it is the API URL.
+   * `DT_TOKEN` - token with the scopes listed above - `dt0c1.XYZ.ABC`.
+   * alternatively provide the parameters `--dt-url` and `--dt-token`.
 
 2. Run the script to convert extension endpoints.
    * Provide synthetic location ids and a work directory to store the configuration.
