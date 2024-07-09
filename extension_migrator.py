@@ -99,10 +99,8 @@ def get(
                                                              endpoint_config,
                                                              location,
                                                              converter_config)
-            monitor_filename = f"{work_dir}/{uuid4().hex}-{re.sub('[^0-9a-zA-Z_-]',
-                                                                  '',
-                                                                  endpoint.name.replace(' ', '')
-                                                                  )}-{extension_type.name}-monitor.json"
+            endpoint_name = re.sub('[^0-9a-zA-Z_-]', '', endpoint.name.replace(' ', ''))
+            monitor_filename = f"{work_dir}/{uuid4().hex}-{endpoint_name}-{extension_type.name}-monitor.json"
             try:
                 with open(monitor_filename, "w") as file_handle:
                     json.dump(monitor_definition, file_handle, indent=4)
