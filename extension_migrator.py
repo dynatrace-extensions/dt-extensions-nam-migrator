@@ -81,26 +81,35 @@ def get(
             raise Exception(f"Unable to create directory '{work_dir}', {error}. Aborting.")
 
     if extension_type is None:
-        extension_types_to_convert = [ExtensionType.dns, ExtensionType.ping, ExtensionType.port]
+        extensions_types = [ExtensionType.dns, ExtensionType.ping, ExtensionType.port]
     else:
-        extension_types_to_convert = [extension_type]
+        extensions_types = [extension_type]
 
-    for extension_type in extension_types_to_convert:
-        extension_endpoints = list(dt.extensions.list_instances(extension_id=extension_type.get_extension_id()))
+    extension_types_to_convert = []
+
+    for ext in extensions_types:
+        try:
+            dt.extensions.get(ext.get_extension_id())
+            extension_types_to_convert.append(ext)
+        except Exception:
+            print(f"Extension '{ext.get_extension_id()}' is not present in the environment.")
+
+    for ext in extension_types_to_convert:
+        extension_endpoints = list(dt.extensions.list_instances(extension_id=ext.get_extension_id()))
         for endpoint in extension_endpoints:
-            endpoint_config = endpoint.get_full_configuration(extension_type.get_extension_id()).json()
+            endpoint_config = endpoint.get_full_configuration(ext.get_extension_id()).json()
             if endpoint_config["properties"]["proxy_address"]:
                 print(f"Proxy servers are not supported for NAM monitors. Aborting migration of the endpoint '{endpoint.name}'.")
                 continue
-            if extension_type.get_nam_monitor_type() == "TCP" and endpoint_config["properties"]["test_protocol"] == "UDP":
+            if ext.get_nam_monitor_type() == "TCP" and endpoint_config["properties"]["test_protocol"] == "UDP":
                 print(f"UDP protocol monitors are not supported in NAM. Aborting migration of the endpoint '{endpoint.name}'.")
                 continue
-            monitor_definition = convert_endpoint_to_monitor(extension_type.get_nam_monitor_type(),
+            monitor_definition = convert_endpoint_to_monitor(ext.get_nam_monitor_type(),
                                                              endpoint_config,
                                                              location,
                                                              converter_config)
             endpoint_name = re.sub('[^0-9a-zA-Z_-]', '', endpoint.name.replace(' ', ''))
-            monitor_filename = f"{work_dir}/{uuid4().hex}-{endpoint_name}-{extension_type.name}-monitor.json"
+            monitor_filename = f"{work_dir}/{uuid4().hex}-{endpoint_name}-{ext.name}-monitor.json"
             try:
                 with open(monitor_filename, "w") as file_handle:
                     json.dump(monitor_definition, file_handle, indent=4)
